@@ -1,6 +1,3 @@
-
-
-
-export type PromiseRequest = (...args: any) => Promise<any>
-
-export type PromiseRequestNode = RequestNode<PromiseRequest>
+export interface PromiseRequestNode {
+	[key: string]: (...args: any[]) => Promise<any>
+}
