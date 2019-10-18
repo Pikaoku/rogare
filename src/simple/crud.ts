@@ -24,9 +24,3 @@ export interface SimpleCrud<Model> extends PromiseRequestNode {
 }
 
 export type SimpleCrudApi<Model> = (args: ApiArgs) => SimpleCrud<Model>
-
-export const newSimpleCrudApi: SimpleCrudApi<Model> = args => {
-	return {
-		create: () => Promise.resolve(),
-	}
-}

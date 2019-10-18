@@ -33,4 +33,3 @@ const api: SimpleCrudApi<User> = ({ endpoint, options }): SimpleCrud<User> => ({
 	read: ({ id }) => Promise.resolve().then(() => ({} as User)),
 	update: ({ id, data }) => Promise.resolve(),
 })
-// TODO: Update package.json entry point
