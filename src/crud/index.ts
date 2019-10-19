@@ -46,12 +46,6 @@ export interface CrudEndpointParams<Model>
 	update: WrapperRequest<CrudUpdateArgs<Model>>
 }
 
-interface User {
-	name: string
-	age: number
-	status: 'active' | 'disabled'
-}
-
 export function createCrud<Model>({
 	create: c,
 	read: r,
