@@ -32,7 +32,7 @@ export type Crud<Model> = (args: CrudArgs<Model>) => CrudRequests<Model>
 
 export interface WrapperRequest<T> {
 	request: (a: EndpointArgs & T) => Promise<any>
-	middleware: <U>(a: U) => U
+	middleware?: <U>(a: U) => U
 }
 
 export interface CrudEndpointParams<Model>
@@ -54,12 +54,14 @@ interface User {
 
 export const newCrud: CrudWrapper<User> = ({
 	create: c,
-	delete: d, // FIXME: This is fucking disgusting, but delete is a JS keyword
 	read: r,
 	update: u,
+	delete: d, // FIXME: This is fucking disgusting, but delete is a JS keyword
 	getResponseData,
 	getResponseId,
 }) => ({ recipe, validator, endpoint }) => {
+	const withMiddleware = (action: WrapperRequest<any>) =>
+		action.middleware || ((a: any) => a)
 	return {
 		create: ({ data, options = {} }) =>
 			c
@@ -68,18 +70,19 @@ export const newCrud: CrudWrapper<User> = ({
 					endpoint,
 					options,
 				})
-				.then(c.middleware)
+				.then(withMiddleware(c))
 				.then(getResponseId),
 		delete: ({ id, options = {} }) =>
 			d
 				.request({ endpoint, id, options })
-				.then(d.middleware)
+				.then(withMiddleware(d))
 				.then(),
 		read: ({ id, options = {} }) =>
 			r
 				.request({ endpoint, id, options })
-				.then(r.middleware)
-				.then(getResponseData),
+				.then(withMiddleware(r))
+				.then(getResponseData)
+				.then(),
 		update: ({ id, data, options = {} }) =>
 			u
 				.request({
@@ -88,7 +91,7 @@ export const newCrud: CrudWrapper<User> = ({
 					id,
 					options,
 				})
-				.then(u.request)
+				.then(withMiddleware(r))
 				.then(),
 	}
 }
