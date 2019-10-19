@@ -73,11 +73,6 @@ export function createCrud<Model>({
 					})
 					.then(withMiddleware(c))
 					.then(getResponseId),
-			delete: ({ id, options = {} }) =>
-				d
-					.request({ endpoint, id, options })
-					.then(withMiddleware(d))
-					.then(),
 			read: ({ id, options = {} }) =>
 				r
 					.request({ endpoint, id, options })
@@ -93,6 +88,11 @@ export function createCrud<Model>({
 						options,
 					})
 					.then(withMiddleware(r))
+					.then(),
+			delete: ({ id, options = {} }) =>
+				d
+					.request({ endpoint, id, options })
+					.then(withMiddleware(d))
 					.then(),
 		}
 	}
