@@ -11,5 +11,5 @@ interface MyApi {
 }
 
 const api: PikaPI<MyApi> = {
-	users: 'hello',
+	users: newFetchCrud({endpoint: 'whatever'}),
 }
