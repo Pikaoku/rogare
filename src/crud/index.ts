@@ -52,7 +52,7 @@ interface User {
 	status: 'active' | 'disabled'
 }
 
-export function newCrud<Model>({
+export function createCrud<Model>({
 	create: c,
 	read: r,
 	update: u,
