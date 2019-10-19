@@ -7,6 +7,8 @@ import {
 	ValidatorArgs,
 } from '../PikaPI'
 
+// TODO: Investigate the viability of using FEAR instead of CRUD
+
 export type CrudCreateArgs<Model> = HasModel<Model> & HasOptions
 export type CrudReadArgs = HasId & HasOptions
 export type CrudUpdateArgs<Model> = HasId & HasModel<Model> & HasOptions
@@ -44,54 +46,55 @@ export interface CrudEndpointParams<Model>
 	update: WrapperRequest<CrudUpdateArgs<Model>>
 }
 
-export type CrudWrapper<Model> = (a: CrudEndpointParams<Model>) => Crud<Model>
-
 interface User {
 	name: string
 	age: number
 	status: 'active' | 'disabled'
 }
 
-export const newCrud: CrudWrapper<User> = ({
+export function newCrud<Model>({
 	create: c,
 	read: r,
 	update: u,
 	delete: d, // FIXME: This is fucking disgusting, but delete is a JS keyword
 	getResponseData,
 	getResponseId,
-}) => ({ recipe, validator, endpoint }) => {
-	const withMiddleware = (action: WrapperRequest<any>) =>
-		action.middleware || ((a: any) => a)
-	return {
-		create: ({ data, options = {} }) =>
-			c
-				.request({
-					data: validator(data, recipe),
-					endpoint,
-					options,
-				})
-				.then(withMiddleware(c))
-				.then(getResponseId),
-		delete: ({ id, options = {} }) =>
-			d
-				.request({ endpoint, id, options })
-				.then(withMiddleware(d))
-				.then(),
-		read: ({ id, options = {} }) =>
-			r
-				.request({ endpoint, id, options })
-				.then(withMiddleware(r))
-				.then(getResponseData)
-				.then(),
-		update: ({ id, data, options = {} }) =>
-			u
-				.request({
-					data,
-					endpoint,
-					id,
-					options,
-				})
-				.then(withMiddleware(r))
-				.then(),
+}: CrudEndpointParams<Model>) {
+	const crud: Crud<Model> = ({ recipe, validator, endpoint }) => {
+		const withMiddleware = (action: WrapperRequest<any>) =>
+			action.middleware || ((a: any) => a)
+		return {
+			create: ({ data, options = {} }) =>
+				c
+					.request({
+						data: validator(data, recipe),
+						endpoint,
+						options,
+					})
+					.then(withMiddleware(c))
+					.then(getResponseId),
+			delete: ({ id, options = {} }) =>
+				d
+					.request({ endpoint, id, options })
+					.then(withMiddleware(d))
+					.then(),
+			read: ({ id, options = {} }) =>
+				r
+					.request({ endpoint, id, options })
+					.then(withMiddleware(r))
+					.then(getResponseData)
+					.then(),
+			update: ({ id, data, options = {} }) =>
+				u
+					.request({
+						data,
+						endpoint,
+						id,
+						options,
+					})
+					.then(withMiddleware(r))
+					.then(),
+		}
 	}
+	return crud // CODESTYLE: Investigate if this guy can be got rid of
 }
