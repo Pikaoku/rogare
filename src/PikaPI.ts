@@ -1,35 +1,37 @@
-export type Request = (...args: any) => any
+import { SubscribableOrPromise } from 'rxjs'
 
-export interface ApiArgs {
+export interface EndpointArgs {
 	endpoint: string
-	options?: object
 }
 
-export type RequestNode<RequestType extends Request> = (
-	args: ApiArgs
+export interface ValidatorArgs<Model> {
+	validator: (data: Partial<Model>, recipe: Model) => Model
+	recipe: Model
+}
+
+export type Request<T, A = any> = (args: A) => SubscribableOrPromise<T>
+export type PromiseRequest<T, A = any> = (args: A) => Promise<T>
+
+export interface HasOptions {
+	options?: object
+}
+export interface HasData {
+	data: object
+}
+export interface HasModel<Model> {
+	data: Partial<Model>
+}
+export interface HasId {
+	id: string
+}
+
+export type RequestNode<RequestType> = (
+	args: EndpointArgs
 ) => {
 	[key: string]: RequestType | RequestNode<RequestType>
 }
 
-// export interface HasStreams<Model> {
-// 	lists: {
-// 		[key: string]: Subscribable<Model>
-// 	}
-// }
-
-export type PikaPI<ApiSpec> = {
-	[K in keyof ApiSpec]: RequestNode<Request>
+export interface EndpointParams<Model> {
+	getResponseData: (response: any) => Partial<Model>
+	getResponseId: (response: any) => string
 }
-
-interface User {
-	id: 'hello'
-	age: number
-	status: 'active' | 'disabled'
-}
-
-const api: SimpleCrudApi<User> = ({ endpoint, options }): SimpleCrud<User> => ({
-	create: ({ data }) => Promise.resolve().then(() => JSON.stringify(data)),
-	delete: ({ id }) => Promise.resolve(),
-	read: ({ id }) => Promise.resolve().then(() => ({} as User)),
-	update: ({ id, data }) => Promise.resolve(),
-})
