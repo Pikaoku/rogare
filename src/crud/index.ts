@@ -81,7 +81,7 @@ export function createCrud<Model>({
 						id,
 						options,
 					})
-					.then(withMiddleware(r))
+					.then(withMiddleware(u))
 					.then(),
 			delete: ({ id, options = {} }) =>
 				d
