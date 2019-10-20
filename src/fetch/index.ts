@@ -1,77 +1,67 @@
-import { createCrud } from '../crud'
-import { EndpointArgs, HasOptions, HasData, HasId, ValidatorArgs } from '../PikaPI'
+import {
+	CrudEndpoint,
+	CrudParamsCreate,
+	CrudParamsRead,
+	CrudParamsUpdate,
+} from '../crud'
+import { ApiEndpoint } from '../PikaPI'
+import {
+	defaultErrorHandler,
+	HasErrorHandler,
+	RequestErrorHandler,
+} from '../handlers/errors'
 
-type RestFetchApiParams = HasOptions & EndpointArgs & {
-    formatter?: (endpoint: string, id: string) => string
+type Furnisher<Model> = (data: Partial<Model>) => Model | Partial<Model>
+
+export interface FetchCrudEndpointParams<Model> extends ApiEndpoint {
+	furnish?: Furnisher<Model>
 }
 
-const defaultFormatter = (endpoint: string, id: string) => `${endpoint}/${id}`
+export class FetchCrudEndpoint<Model> extends CrudEndpoint<Model>
+	implements HasErrorHandler {
+	public readonly errorHandler: RequestErrorHandler
+	protected readonly furnish: Furnisher<Model>
 
-async function genericFetch(endpoint: string, method: string = 'GET', options: {} = {}, body: {} = {}) {
-    return await fetch(endpoint, {
-        ...options,
-        body: JSON.stringify(body),
-        method
-    });
-}
+	constructor({
+		furnish = (data: Partial<Model>) => data,
+		errorHandler = defaultErrorHandler,
+		...rest
+	}: FetchCrudEndpoint<Model>) {
+		super(rest)
+		this.furnish = furnish
+		this.errorHandler = errorHandler
+	}
 
-const RestFetchAPI = {
-	post: async ({
+	public async create({
 		data,
-		endpoint,
-		options = {},
-	}: RestFetchApiParams & HasData) => {
-		await genericFetch(endpoint, 'POST', options, data)
-	},
-	get: async ({
-		id,
-        endpoint,
-        formatter = defaultFormatter,
-		options = {},
-	}: RestFetchApiParams & HasId) => 
-		await genericFetch(formatter(endpoint, id), 'GET', options),
-	patch: async ({
-		id,
-		data,
-        endpoint,
-        formatter = ,
-		options = {},
-	}: RestFetchApiParams & HasId & HasData ) => {
-		await genericFetch(formatter(endpoint, id), 'PATCH', options, data)
-	},
-	delete: async ({
-		id,
-        endpoint,
-        formatter = defaultFormatter,
-		options = {},
-	}: RestFetchApiParams & HasId) => {
-		await genericFetch(formatter(endpoint, id), 'DELETE', options)
-	},
-}
+		options,
+	}: CrudParamsCreate<Model>): Promise<string> {
+		const response = await this.doRequest('POST', options, data)
+		return this.extractId(response)
+	}
 
-export default RestFetchAPI
+	public async read({ id, options }: CrudParamsRead): Promise<Model> {
+		const response = await this.doRequest('GET', options, undefined, id)
+		return this.furnish(this.extractModel<Model>(response.body)) // FIXME: Type Error
+	}
+	public async update(args: CrudParamsUpdate<Model>): Promise<void> {
+		throw new Error('Method not implemented.')
+	}
+	public async delete(args: CrudParamsRead): Promise<void> {
+		throw new Error('Method not implemented.')
+	}
 
-export function newFetchCrud<Model>({ recipe, validator, endpoint}: EndpointArgs & ValidatorArgs<Model>) {
-	return createCrud({
-		create: {
-            request: RestFetchAPI.post
-        },
-        read: {
-            request: RestFetchAPI.get
-        },
-        update: {
-            request: RestFetchAPI.patch,
-        },
-        delete: {
-            request: RestFetchAPI.delete
-        },
-        getResponseId: async (response) => {
-            const json = await response.json()
-            return json.body
-        },
-        getResponseData: async (response) => {
-            const json = await response.json()
-            return json.body
-        }
-	})({ recipe, validator, endpoint })
+	protected getEndpoint(id?: string) {
+		return [this.endpoint, id].filter(a => !!a).join('/')
+	}
+
+	private doRequest(method: string, options = {}, data = {}, id?: string) {
+		return Promise.resolve(
+			fetch(this.getEndpoint(id), {
+				...options,
+				method,
+				body: JSON.stringify(data),
+			})
+		).then(response => response.json(), this.errorHandler)
+	}
 }
