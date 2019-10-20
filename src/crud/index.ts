@@ -1,94 +1,31 @@
 import {
-	EndpointArgs,
-	EndpointParams,
+	ApiEndpoint,
+	BaseEndpoint,
 	HasId,
 	HasModel,
 	HasOptions,
-	ValidatorArgs,
 } from '../PikaPI'
 
 // TODO: Investigate the viability of using FEAR instead of CRUD
 
-export type CrudCreateArgs<Model> = HasModel<Model> & HasOptions
-export type CrudReadArgs = HasId & HasOptions
-export type CrudUpdateArgs<Model> = HasId & HasModel<Model> & HasOptions
-export type CrudDeleteArgs = HasId & HasOptions
+export type CrudParamsCreate<Model> = HasModel<Model> & HasOptions
+export type CrudParamsRead = HasId & HasOptions
+export type CrudParamsUpdate<Model> = HasId & HasModel<Model> & HasOptions
 
-interface CrudKeys {
-	create: any
-	read: any
-	update: any
-	delete: any
+export interface CrudEndpointMethods<Model> extends ApiEndpoint {
+	create: (args: CrudParamsCreate<Model>) => Promise<string>
+	read: (args: CrudParamsRead) => Promise<Partial<Model>>
+	update: (args: CrudParamsUpdate<Model>) => Promise<void | null | undefined>
+	delete: (args: CrudParamsRead) => Promise<void | null | undefined>
 }
 
-interface CrudRequests<Model> extends CrudKeys {
-	create: (args: CrudCreateArgs<Model>) => Promise<string>
-	read: (args: CrudReadArgs) => Promise<Model>
-	update: (args: CrudUpdateArgs<Model>) => Promise<void | null | undefined>
-	delete: (args: CrudDeleteArgs) => Promise<void | null | undefined>
-}
-
-export type CrudArgs<Model> = EndpointArgs & ValidatorArgs<Model>
-
-export type Crud<Model> = (args: CrudArgs<Model>) => CrudRequests<Model>
-
-export interface WrapperRequest<T> {
-	request: (a: EndpointArgs & T) => Promise<any>
-	middleware?: <U>(a: U) => U
-}
-
-export interface CrudEndpointParams<Model>
-	extends EndpointParams<Model>,
-		CrudKeys {
-	create: WrapperRequest<CrudCreateArgs<Model>>
-	delete: WrapperRequest<CrudDeleteArgs>
-	read: WrapperRequest<CrudReadArgs>
-	update: WrapperRequest<CrudUpdateArgs<Model>>
-}
-
-export function createCrud<Model>({
-	create: c,
-	read: r,
-	update: u,
-	delete: d, // FIXME: This is fucking disgusting, but delete is a JS keyword
-	getResponseData,
-	getResponseId,
-}: CrudEndpointParams<Model>) {
-	const crud: Crud<Model> = ({ recipe, validator, endpoint }) => {
-		const withMiddleware = (action: WrapperRequest<any>) =>
-			action.middleware || ((a: any) => a)
-		return {
-			create: ({ data, options = {} }) =>
-				c
-					.request({
-						data: validator(data, recipe),
-						endpoint,
-						options,
-					})
-					.then(withMiddleware(c))
-					.then(getResponseId),
-			read: ({ id, options = {} }) =>
-				r
-					.request({ endpoint, id, options })
-					.then(withMiddleware(r))
-					.then(getResponseData)
-					.then(),
-			update: ({ id, data, options = {} }) =>
-				u
-					.request({
-						data,
-						endpoint,
-						id,
-						options,
-					})
-					.then(withMiddleware(u))
-					.then(),
-			delete: ({ id, options = {} }) =>
-				d
-					.request({ endpoint, id, options })
-					.then(withMiddleware(d))
-					.then(),
-		}
+export abstract class CrudEndpoint<Model> extends BaseEndpoint
+	implements CrudEndpointMethods<Model> {
+	constructor(args: ApiEndpoint) {
+		super(args)
 	}
-	return crud // CODESTYLE: Investigate if this guy can be got rid of
+	public abstract async create(args: CrudParamsCreate<Model>): Promise<string>
+	public abstract async read(args: CrudParamsRead): Promise<Model>
+	public abstract async update(args: CrudParamsUpdate<Model>): Promise<void>
+	public abstract async delete(args: CrudParamsRead): Promise<void>
 }
