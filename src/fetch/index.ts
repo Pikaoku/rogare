@@ -23,7 +23,7 @@ export class FetchCrudEndpoint<Model> extends CrudEndpoint<Model>
 	protected readonly furnish: Furnisher<Model>
 
 	constructor({
-		furnish = (data: Partial<Model>) => data,
+		furnish = (¬data: Partial<Model>) => data,
 		errorHandler = defaultErrorHandler,
 		...rest
 	}: FetchCrudEndpoint<Model>) {
