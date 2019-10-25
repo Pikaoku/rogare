@@ -3,13 +3,13 @@ import {
 	CrudParamsCreate,
 	CrudParamsRead,
 	CrudParamsUpdate,
-} from '../crud'
-import { ApiEndpoint } from '../PikaPI'
+} from './crud'
+import { ApiEndpoint } from './PikaPI'
 import {
 	defaultErrorHandler,
 	HasErrorHandler,
 	RequestErrorHandler,
-} from '../handlers/errors'
+} from './errors'
 
 type Furnisher<Model> = (data: Partial<Model>) => Model | Partial<Model>
 

@@ -1,4 +1,6 @@
-import { Subscribable, SubscribableOrPromise } from 'rxjs'
+import { SubscribableOrPromise } from 'rxjs'
+
+// TODO: Revisit idea of changing file structure.
 
 export interface HasOptions {
 	options?: object
@@ -13,19 +15,16 @@ export interface HasId {
 	id: string
 }
 
-// export type Request<T = SubscribableOrPromise<any>> = (args: any) => T
-// export type PromiseRequest<T = any> = Request<Promise<T>>
-// export type SubscribleRequest<T = any> = Request<Subscribable<T>>
-
 export type EndpointActionParams = HasOptions & (HasData | HasId)
 
 export type EndpointAction<T = void> = (
 	params: EndpointActionParams
 ) => SubscribableOrPromise<T>
 
-export type EndpointParams = {endpoint: string} & HasOptions
+export type EndpointParams = { endpoint: string } & HasOptions
+
 export interface Endpoint {
-	readonly [key: string]: EndpointAction
+	readonly [key: string]: EndpointAction<any>
 }
 
 export type EndpointInitializer = (params: EndpointParams) => Endpoint
