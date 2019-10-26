@@ -2,8 +2,14 @@ import { SubscribableOrPromise } from 'rxjs'
 
 // TODO: Revisit idea of changing file structure.
 
+export interface Options {
+	// tslint:disable-next-line: no-any
+	[key: string]: any,
+
+}
+
 export interface HasOptions {
-	options?: object
+	options?: Options
 }
 export interface HasData {
 	data: {}
