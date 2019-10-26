@@ -6,28 +6,33 @@ export interface HasOptions {
 	options?: object
 }
 export interface HasData {
-	data: object
+	data: {}
 }
-export interface HasModel<Model> {
+export interface HasModel<Model extends {}> extends HasData {
 	data: Model | Partial<Model>
 }
 export interface HasId {
 	id: string
 }
 
-export type EndpointActionParams = HasOptions & (HasData | HasId)
+export interface EndpointActionParams extends HasOptions {
+	noop?: boolean
+}
 
-export type EndpointAction<T = void> = (
-	params: EndpointActionParams
-) => SubscribableOrPromise<T>
+export type EndpointAction<P = EndpointActionParams, R = void> = (
+	params: P
+) => SubscribableOrPromise<R>
 
 export type EndpointParams = { endpoint: string } & HasOptions
 
 export interface Endpoint {
-	readonly [key: string]: EndpointAction<any>
+	readonly [key: string]: EndpointAction<any, any>
 }
 
-export type EndpointInitializer = (params: EndpointParams) => Endpoint
+export type EndpointInitializer<
+	EndpointType = Endpoint,
+	Params = EndpointParams
+> = (params: Params) => EndpointType
 
 export interface PikaPi {
 	readonly [key: string]: EndpointInitializer

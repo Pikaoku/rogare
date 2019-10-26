@@ -3,8 +3,8 @@ import {
 	CrudParamsCreate,
 	CrudParamsRead,
 	CrudParamsUpdate,
-} from './crud'
-import { ApiEndpoint } from './PikaPI'
+} from '../crud'
+import { ApiEndpoint } from '../PikaPI'
 import {
 	defaultErrorHandler,
 	HasErrorHandler,
