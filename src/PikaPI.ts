@@ -4,8 +4,7 @@ import { SubscribableOrPromise } from 'rxjs'
 
 export interface Options {
 	// tslint:disable-next-line: no-any
-	[key: string]: any,
-
+	[key: string]: any
 }
 
 export interface HasOptions {
@@ -21,6 +20,10 @@ export interface HasId {
 	id: string
 }
 
+/**
+ *
+ */
+
 export interface EndpointActionParams extends HasOptions {
 	noop?: boolean
 }
@@ -29,9 +32,14 @@ export type EndpointAction<P = EndpointActionParams, R = void> = (
 	params: P
 ) => SubscribableOrPromise<R>
 
-export type EndpointParams = { endpoint: string } & HasOptions
+export type EndpointParams = {
+	endpoint: string
+	// tslint:disable-next-line: no-any
+	request?: (params: any) => Promise<any>
+} & HasOptions
 
 export interface Endpoint {
+	// tslint:disable-next-line: no-any
 	readonly [key: string]: EndpointAction<any, any>
 }
 

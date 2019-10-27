@@ -1,12 +1,24 @@
 import { CrudEndpointInitializer } from '../../crud'
 
-type Model = unknown
-
-export const RestCrud: CrudEndpointInitializer<Model> = ({ endpoint, options }) => {
+export const RestCrud: CrudEndpointInitializer<unknown> = ({
+	endpoint,
+	options: endpointOptions = {},
+	request = fetch,
+}) => {
 	return {
-		create: ({ data, options }) => Promise.resolve().then(() => 'Hello'),
-		read: ({  } ) => Promise.resolve().then(() => ({} as Model)),
-		update: ({  }) =>
+		create: ({ data, options = {} }) =>
+			Promise.resolve(
+				request(
+					new Request(endpoint, {
+						...endpointOptions,
+						...options,
+						body: data,
+						method: 'POST',
+					})
+				)
+			),
+		read: ({}) => Promise.resolve().then(() => ({})),
+		update: ({}) =>
 			Promise.resolve().then(() => {
 				/* */
 			}),
