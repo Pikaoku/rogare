@@ -1,32 +1,30 @@
 import {
 	Endpoint,
-	EndpointAction,
-	EndpointActionParams,
+	Operation,
+	OperationParams,
 	EndpointInitializer,
 	HasId,
 	HasModel,
 	HasOptions,
 } from './PikaPI'
 
-export interface CrudParamsCreate<Model> extends EndpointActionParams {
-	data: Model | Partial<Model>
-}
+export type CrudOperationParamsCreate<Model> = HasModel<Model> & OperationParams
+export type CrudOperationParamsRead = HasId & HasOptions & OperationParams
+export type CrudOperationParamsUpdate<Model> = HasId &
+	HasModel<Model> &
+	HasOptions &
+	OperationParams
 
-export type CrudParamsRead = HasId & HasOptions
-export type CrudParamsUpdate<Model> = HasId & HasModel<Model> & HasOptions
-
-export type CrudParams<Model> =
-	| CrudParamsCreate<Model>
-	| CrudParamsRead
-	| CrudParamsUpdate<Model>
+export type CrudOperationParams<Model> =
+	| CrudOperationParamsCreate<Model>
+	| CrudOperationParamsRead
+	| CrudOperationParamsUpdate<Model>
 
 export interface CrudEndpoint<Model> extends Endpoint {
-	create: EndpointAction<CrudParamsCreate<Model>, string>
-	read: EndpointAction<CrudParamsRead, Model>
-	update: EndpointAction<CrudParamsUpdate<Model>>
-	destroy: EndpointAction<CrudParamsRead>
+	create: Operation<CrudOperationParamsCreate<Model>, string>
+	read: Operation<CrudOperationParamsRead, Model>
+	update: Operation<CrudOperationParamsUpdate<Model>>
+	destroy: Operation<CrudOperationParamsRead>
 }
 
-export type CrudEndpointInitializer<Model> = EndpointInitializer<
-	CrudEndpoint<Model>
->
+export type CrudEndpointInitializer<Model> = EndpointInitializer<CrudEndpoint<Model>>

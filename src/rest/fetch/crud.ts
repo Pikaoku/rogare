@@ -1,10 +1,11 @@
-import { CrudEndpointInitializer } from '../../crud'
+import { CrudEndpointInitializer, CrudEndpoint } from '../../crud'
+import { EndpointParams } from '../../PikaPI'
 
-export const RestCrud: CrudEndpointInitializer<unknown> = ({
+export function RestFetchCrud<Model>({
 	endpoint,
 	options: endpointOptions = {},
 	request = fetch,
-}) => {
+}: EndpointParams): CrudEndpoint<Model> {
 	return {
 		create: ({ data, options = {} }) =>
 			Promise.resolve(

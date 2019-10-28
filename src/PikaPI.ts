@@ -24,11 +24,11 @@ export interface HasId {
  *
  */
 
-export interface EndpointActionParams extends HasOptions {
+export interface OperationParams extends HasOptions {
 	noop?: boolean
 }
 
-export type EndpointAction<P = EndpointActionParams, R = void> = (
+export type Operation<P = OperationParams, R = void> = (
 	params: P
 ) => SubscribableOrPromise<R>
 
@@ -40,7 +40,7 @@ export type EndpointParams = {
 
 export interface Endpoint {
 	// tslint:disable-next-line: no-any
-	readonly [key: string]: EndpointAction<any, any>
+	readonly [key: string]: Operation<any, any>
 }
 
 export type EndpointInitializer<
