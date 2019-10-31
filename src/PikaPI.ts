@@ -32,21 +32,20 @@ export type Operation<P = OperationParams, R = void> = (
 	params: P
 ) => SubscribableOrPromise<R>
 
-export type EndpointParams = {
+export interface EndpointParams extends HasOptions {
 	endpoint: string
 	// tslint:disable-next-line: no-any
 	request?: (params: any) => Promise<any>
-} & HasOptions
+}
 
 export interface Endpoint {
 	// tslint:disable-next-line: no-any
 	readonly [key: string]: Operation<any, any>
 }
 
-export type EndpointInitializer<
-	EndpointType = Endpoint,
-	Params = EndpointParams
-> = (params: Params) => EndpointType
+export type EndpointInitializer<EndpointType = Endpoint, Params = EndpointParams> = (
+	params: Params
+) => EndpointType
 
 export interface PikaPi {
 	readonly [key: string]: EndpointInitializer

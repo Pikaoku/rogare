@@ -1,5 +1,9 @@
-import { HasOptions } from './PikaPI'
+import { EndpointParams, OperationParams } from './PikaPI'
 
-export type FetchOptions = HasOptions & {
+export interface FetchEndpointParams extends EndpointParams {
 	options: Partial<RequestInit>
+}
+
+export interface FetchOperationParams extends OperationParams {
+	options: Partial<
 }
