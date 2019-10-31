@@ -1,32 +1,28 @@
 import { CrudEndpoint } from '../../crud'
-import { EndpointParams } from '../../PikaPI'
-import { FetchEndpointParams } from '../../fetch'
+import {
+	fDelete,
+	FetchEndpointParams,
+	FetchOperationParams,
+	fGet,
+	fPatch,
+	fPost,
+} from '../../fetch'
 
-export function RestFetchCrud<Model>({
-	endpoint,
-	options: endpointOptions = {},
-	request = fetch,
+type RestFetchCrud<Model> =  CrudEndpoint<Model, FetchOperationParams>
+export function restFetchCrud<Model>({
+	endpoint: e,
+	options: eops = {},
 }: FetchEndpointParams): CrudEndpoint<Model, FetchOperationParams> {
 	return {
-		create: ({ data, options = {} }) =>
-			Promise.resolve(
-				request(
-					new Request(endpoint, {
-						...endpointOptions,
-						...options,
-						body: data,
-						method: 'POST',
-					})
-				)
-			),
-		read: ({}) => Promise.resolve().then(() => ({})),
-		update: ({}) =>
-			Promise.resolve().then(() => {
-				/* */
-			}),
-		destroy: () =>
-			Promise.resolve().then(() => {
-				/* */
-			}),
+		create: ({ data, options = {} }) => fPost(e, data, { ...eops, ...options }),
+		read: async ({ id, default: d, options = {} }) => ({
+			...d,
+			...(await fGet(`${e}/${id}`, { ...eops, ...options })),
+		}),
+		update: ({ id, data, options = {} }) =>
+			fPatch(`${e}/${id}`, data, { ...eops, ...options }),
+		destroy: ({ id, options }) => fDelete(`${e}/${id}`, { ...eops, ...options }),
 	}
 }
+
+const 

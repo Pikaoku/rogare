@@ -1,4 +1,5 @@
 import {PikaPi} from '../PikaPI'
+import { restFetchCrud } from '../rest/fetch/crud'
 
 interface User {
     name: string,
@@ -7,7 +8,5 @@ interface User {
 }
 
 interface MyApi extends PikaPi {
-    users: () => {
-        
-    }
+    users: () =>  restFetchCrud<User>({ endpoint: 'users' })
 }
