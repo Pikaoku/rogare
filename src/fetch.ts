@@ -46,5 +46,5 @@ export async function fDelete(
 	options: Partial<RequestInit> = {}
 ): Promise<void> {
 	await fetch(endpoint, { ...options, method: 'DELETE' })
-	return
+	return 
 }

@@ -8,7 +8,6 @@ import {
 	fPost,
 } from '../../fetch'
 
-type RestFetchCrud<Model> =  CrudEndpoint<Model, FetchOperationParams>
 export function restFetchCrud<Model>({
 	endpoint: e,
 	options: eops = {},
@@ -24,5 +23,3 @@ export function restFetchCrud<Model>({
 		destroy: ({ id, options }) => fDelete(`${e}/${id}`, { ...eops, ...options }),
 	}
 }
-
-const 

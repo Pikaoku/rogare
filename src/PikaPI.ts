@@ -47,6 +47,8 @@ export type EndpointInitializer<EndpointType = Endpoint, Params = EndpointParams
 	params: Params
 ) => EndpointType
 
+export type CompoundEndpointInitializer = (...args: EndpointInitializer[]) => Endpoint
+
 export interface PikaPi {
-	readonly [key: string]: EndpointInitializer
+	readonly [key: string]: EndpointInitializer | CompoundEndpointInitializer
 }
