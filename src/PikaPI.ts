@@ -1,7 +1,5 @@
 import { SubscribableOrPromise } from 'rxjs'
 
-// TODO: Revisit idea of changing file structure.
-
 export interface Options {
 	// tslint:disable-next-line: no-any
 	[key: string]: any
@@ -19,10 +17,6 @@ export interface HasModel<Model extends {}> extends HasData {
 export interface HasId {
 	id: string
 }
-
-/**
- *
- */
 
 export interface OperationParams extends HasOptions {
 	noop?: boolean
@@ -50,5 +44,5 @@ export type EndpointInitializer<EndpointType = Endpoint, Params = EndpointParams
 export type CompoundEndpointInitializer = (...args: EndpointInitializer[]) => Endpoint
 
 export interface PikaPi {
-	readonly [key: string]: EndpointInitializer | CompoundEndpointInitializer
+	readonly [key: string]: Endpoint
 }

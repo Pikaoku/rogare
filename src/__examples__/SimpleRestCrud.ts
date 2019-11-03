@@ -1,4 +1,4 @@
-import {PikaPi} from '../PikaPI'
+import {PikAPi} from '../pikapi'
 import { restFetchCrud } from '../rest/fetch/crud'
 
 interface User {
@@ -7,6 +7,6 @@ interface User {
     status: 'active' | 'disabled'
 }
 
-interface MyApi extends PikaPi {
+interface MyApi extends PikAPi {
     users: () =>  restFetchCrud<User>({ endpoint: 'users' })
 }
