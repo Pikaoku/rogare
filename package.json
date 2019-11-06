@@ -1,6 +1,6 @@
 {
 	"name": "pikapi",
-	"version": "2.2.1",
+	"version": "2.2.2",
 	"description": "Pikaoku's clientside API Pattern",
 	"main": "lib/index",
 	"scripts": {
