@@ -1,11 +1,11 @@
 {
-    "extends": ["tslint:recommended", "tslint-config-prettier"],
-    "rules": {
-        "interface-name": false,
-        "object-literal-sort-keys": false,
-        "no-any": true
-    },
-    "linterOptions": {
-        "exclude": ["node_modules", "**/__*__/*"]
-    }
+	"extends": ["tslint:recommended", "tslint-config-prettier"],
+	"rules": {
+		"interface-name": false,
+		"object-literal-sort-keys": false,
+		"no-any": true
+	},
+	"linterOptions": {
+		"exclude": ["node_modules", "**/__*__/*"]
+	}
 }

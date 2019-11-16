@@ -1,8 +1,10 @@
 {
 	"name": "pikapi",
 	"version": "2.2.3",
-	"description": "Pikaoku's clientside API Pattern",
-	"main": "lib/index",
+	"description": "a clientside API request making pattern",
+	"main": "lib",
+	"types": "lib",
+	"typings": "lib",
 	"scripts": {
 		"test": "jest --config jestconfig.json --passWithNoTests",
 		"build": "tsc",

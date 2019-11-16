@@ -5,7 +5,7 @@ import {
 	HasModel,
 	Operation,
 	OperationParams,
-} from './PikaPI'
+} from '.'
 
 export interface CrudEndpoint<Model, OP = OperationParams> extends Endpoint {
 	create: Operation<HasModel<Model> & OP, string>
