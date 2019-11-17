@@ -1,35 +1,15 @@
 import { SubscribableOrPromise } from 'rxjs'
 
-export interface Options {
-	// tslint:disable-next-line: no-any
-	[key: string]: any
-}
+import { HasOptions, HasPagination } from './utils'
 
-export interface HasOptions {
-	options?: Options
-}
-export interface HasData {
-	data: {}
-}
-export interface HasModel<Model extends {}> extends HasData {
-	data: Model | Partial<Model>
-}
-export interface HasId {
-	id: string
-}
+export type OperationParams = HasOptions & HasPagination
 
-export interface OperationParams extends HasOptions {
-	noop?: boolean
-}
+export type Operation<Params = OperationParams, ReturnType = void> = (
+	params: Params
+) => PromiseLike<ReturnType>
 
-export type Operation<P = OperationParams, R = void> = (
-	params: P
-) => SubscribableOrPromise<R>
-
-export interface EndpointParams extends HasOptions {
+export interface EndpointParams extends HasOptions, HasPagination {
 	endpoint: string
-	// tslint:disable-next-line: no-any
-	request?: (params: any) => Promise<any>
 }
 
 export interface Endpoint {
@@ -48,3 +28,4 @@ export interface PikaPi {
 }
 
 export * from './crud'
+export * from './utils'

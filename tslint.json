@@ -2,8 +2,7 @@
 	"extends": ["tslint:recommended", "tslint-config-prettier"],
 	"rules": {
 		"interface-name": false,
-		"object-literal-sort-keys": false,
-		"no-any": true
+		"object-literal-sort-keys": false
 	},
 	"linterOptions": {
 		"exclude": ["node_modules", "**/__*__/*"]
