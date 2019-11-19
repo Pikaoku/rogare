@@ -1,8 +1,7 @@
-import { SubscribableOrPromise } from 'rxjs'
+import * as Crud from './crud'
+import * as Helpers from './helpers'
 
-import { HasOptions, HasPagination } from './utils'
-
-export type OperationParams = HasOptions & HasPagination
+export type OperationParams = Helpers.HasOptions & Helpers.HasPagination
 
 export type Operation<Params = OperationParams, ReturnType = void> = (
 	params: Params
@@ -21,11 +20,10 @@ export type EndpointInitializer<EndpointType = Endpoint, Params = EndpointParams
 	params: Params
 ) => EndpointType
 
-export type CompoundEndpointInitializer = (...args: EndpointInitializer[]) => Endpoint
+type CompoundEndpointInitializer = (...args: EndpointInitializer[]) => Endpoint
 
-export interface PikaPi {
+interface Rogare {
 	readonly [key: string]: Endpoint
 }
 
-export * from './crud'
-export * from './utils'
+export { Rogare, Crud, Helpers }

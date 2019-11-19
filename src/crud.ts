@@ -7,7 +7,8 @@ import {
 	OperationParams,
 } from '.'
 
-export interface CrudEndpoint<Model, OP = OperationParams> extends Endpoint {
+export interface CrudEndpoint<Model, E = PromiseLike<Model>, OP = OperationParams>
+	extends Endpoint<E> {
 	create: Operation<HasModel<Model> & OP, string>
 	read: Operation<HasId & OP & { default: Model }, Model>
 	update: Operation<HasId & HasModel<Model> & OP>
