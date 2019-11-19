@@ -40,9 +40,6 @@
   "files": [
     "lib/**/*"
   ],
-  "dependencies": {
-    "rxjs": "^6.5.3"
-  },
   "directories": {
     "lib": "lib"
   }
