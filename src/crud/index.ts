@@ -5,7 +5,7 @@ import {
 	HasModel,
 	Operation,
 	OperationParams,
-} from '.'
+} from '..'
 
 export interface CrudEndpoint<Model, E = PromiseLike<Model>, OP = OperationParams>
 	extends Endpoint<E> {
