@@ -1,10 +1,5 @@
-import { Has } from '..'
-
-
-
-
-type CompoundEndpointInitializer = (...args: EndpointInitializer[]) => Endpoint
+import { Endpoint } from '..'
 
 interface Rogare {
-	readonly [key: string]: Endpoint
+	readonly [key: string]: Endpoint.Base<any>
 }
