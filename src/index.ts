@@ -1,9 +1,8 @@
 import * as Crud from './crud'
-import * as Endpoint from './endpoint'
-import * as Has from './has'
-import * as Helpers from './helpers'
-import * as Operation from './operation'
+import * as Has from './helpers/has'
+import * as Where from './helpers/where'
 import * as Rogare from './rogare'
-import * as Where from './where'
+import * as Endpoint from './rogare/endpoint'
+import * as Operation from './rogare/operation'
 
-export { Rogare, Crud, Helpers, Has, Where, Endpoint, Operation }
+export { Rogare, Crud, Has, Where, Endpoint, Operation }
